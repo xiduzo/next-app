@@ -1,20 +1,37 @@
-import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import { getThoughts } from "@/lib/thoughts"
+import { ThoughtForm } from "@/components/thought-form"
+import { ThoughtCard } from "@/components/thought-card"
+import { SparklesIcon } from "lucide-react"
 
-export default function Page() {
+export const dynamic = "force-dynamic"
+
+export default async function Page() {
+  const thoughts = await getThoughts()
+
   return (
-    <div className="flex min-h-svh p-6">
-      <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-        <div>
-          <h1 className="font-medium">Welcome to my project!</h1>
-          <p>You may now add components and start building.</p>
-          <p>We&apos;ve already added the button component for you.</p>
-          <Button className="mt-2">Button</Button>
-          <Checkbox />
-        </div>
-        <div className="font-mono text-xs text-muted-foreground">
-          (Press <kbd>d</kbd> to toggle dark mode)
-        </div>
+    <div className="mx-auto flex min-h-svh max-w-xl flex-col gap-6 p-6">
+      <header className="flex flex-col gap-1">
+        <h1 className="flex items-center gap-2 text-xl font-semibold">
+          <SparklesIcon className="size-5" />
+          Thoughts
+        </h1>
+        <p className="text-sm text-muted-foreground">
+          Share your thoughts and inspire the world.
+        </p>
+      </header>
+
+      <ThoughtForm />
+
+      <div className="flex flex-col gap-4">
+        {thoughts.length === 0 ? (
+          <p className="py-8 text-center text-sm text-muted-foreground">
+            No thoughts yet. Be the first to share one!
+          </p>
+        ) : (
+          thoughts.map((thought) => (
+            <ThoughtCard key={thought.id} thought={thought} />
+          ))
+        )}
       </div>
     </div>
   )
